@@ -15,13 +15,14 @@ class UserRepository(Repository):
     async def create(self, cmd: models.CreateUserCommand) -> models.User:
         q = """
             insert into users(
-                username, password, phone_number
+                username, password, phone_number, is_active
             ) values (
                 %(username)s,
                 %(password)s::bytea,
-                %(phone_number)s
+                %(phone_number)s,
+                %(is_active)s
             )
-            returning id, username, password, phone_number;
+            returning id, username, password, phone_number, is_active;
         """
         async with get_connection() as cur:
             await cur.execute(q, cmd.to_dict(show_secrets=True))
@@ -34,7 +35,8 @@ class UserRepository(Repository):
                 users.id,
                 username,
                 password,
-                phone_number
+                phone_number,
+                is_active
             from users
             where users.id = %(id)s;
         """
@@ -49,7 +51,7 @@ class UserRepository(Repository):
     ) -> models.User:
         q = """
             select
-                users.id, username, password, phone_number
+                users.id, username, password, phone_number, is_active
             from users
             where username = %(username)s
         """
@@ -64,7 +66,8 @@ class UserRepository(Repository):
                 users.id,
                 username,
                 password,
-                phone_number
+                phone_number,
+                is_active
             from users;
         """
         async with get_connection() as cur:
@@ -92,10 +95,23 @@ class UserRepository(Repository):
             return await cur.fetchone()
 
     @collect_response
+    async def update_user_status(self, cmd: models.UpdateUserStatusCommand) -> models.User:
+        q = """
+            update users
+                set is_active = %(is_active)s
+                where id = %(id)s
+            returning
+                id, username, password, phone_number, is_active
+        """
+        async with get_connection() as cur:
+            await cur.execute(q, cmd.to_dict(show_secrets=True))
+            return await cur.fetchone()
+
+    @collect_response
     async def delete(self, cmd: models.DeleteUserCommand) -> models.User:
         q = """
             delete from users where id = %(id)s
-            returning id, username, password, phone_number;
+            returning id, username, password, phone_number, is_active;
         """
         async with get_connection() as cur:
             await cur.execute(q, cmd.to_dict(show_secrets=True))

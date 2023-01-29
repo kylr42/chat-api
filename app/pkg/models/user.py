@@ -11,6 +11,7 @@ __all__ = [
     "ReadUserByIdQuery",
     "ReadUserByUserNameQuery",
     "UpdateUserCommand",
+    "UpdateUserStatusCommand",
     "DeleteUserCommand",
     "ChangeUserPasswordCommand",
 ]
@@ -44,7 +45,7 @@ class UserFields:
         max_length=15,
         regex=r"^\+?1?\d{9,15}$",
     )
-    is_active = Field(description="User is active.", example=True, is_active=True)
+    is_active = Field(description="User is active.", example=True, default=False)
 
 
 class BaseUser(BaseModel):
@@ -74,7 +75,7 @@ class UpdateUserCommand(BaseUser):
     phone_number: str = UserFields.phone_number
 
 
-class UpdateStatusUserCommand(BaseUser):
+class UpdateUserStatusCommand(BaseUser):
     id: PositiveInt = UserFields.id
     is_active: bool = UserFields.is_active
 

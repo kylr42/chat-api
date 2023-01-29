@@ -57,6 +57,7 @@ async def insert_default_user(
                 username=settings.API_DEFAULT_USERNAME,
                 password=settings.API_DEFAULT_PASSWORD.get_secret_value(),
                 phone_number=settings.API_DEFAULT_PHONE_NUMBER,
+                is_active=True,
             )
         )
 
