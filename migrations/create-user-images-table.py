@@ -14,8 +14,8 @@ steps = [
                 url text unique not null,
                 created_at timestamp default now() not null,
                 updated_at timestamp default now() not null,
-                foreign key (user_id) references users(id) on delete cascade
-            )
+                user_id int references users(id) on delete cascade
+            );
         """,
         """
             drop table if exists user_images; 
