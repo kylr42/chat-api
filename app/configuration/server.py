@@ -1,0 +1,107 @@
+"""Server configuration."""
+import logging
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.configuration.events import on_startup
+from app.configuration.logger import EndpointFilter
+from app.configuration.sockets import SocketServer
+from app.internal.pkg.middlewares.handle_http_exceptions import handle_api_exceptions
+from app.internal.routes import __routes__
+from app.pkg.models.base import BaseAPIException
+from app.pkg.models.types.fastapi import FastAPITypes
+from app.pkg.settings import settings
+
+__all__ = ["Server"]
+
+
+class Server:
+    """Register all requirements for correct work of server instance."""
+
+    __app: FastAPI
+    __app_name: str = settings.API_INSTANCE_APP_NAME
+
+    def __init__(self, app: FastAPI, socket_server: SocketServer):
+        self.__app = app
+        self._register_routes(app)
+        self._register_events(app)
+        self._register_middlewares(app)
+        self._register_http_exceptions(app)
+        self._register_socket_io(app, socket_server)
+
+    def get_app(self) -> FastAPI:
+        """Get current application instance.
+
+        Returns: ``FastAPI`` application instance.
+        """
+        return self.__app
+
+    @staticmethod
+    def _register_events(app: FastAPITypes.FastAPIInstance) -> None:
+        """Register on startup events.
+
+        Args:
+            app: ``FastAPI`` application instance.
+
+        Returns: None
+        """
+
+        app.on_event("startup")(on_startup)
+
+    @staticmethod
+    def _register_routes(app: FastAPITypes.FastAPIInstance) -> None:
+        """Include routers in ``FastAPI`` instance from ``__routes__``.
+
+        Args:
+            app: ``FastAPI`` application instance.
+
+        Returns: None
+        """
+
+        __routes__.register_routes(app)
+
+    @staticmethod
+    def _register_http_exceptions(app: FastAPITypes.FastAPIInstance) -> None:
+        """Register http exceptions.
+
+        FastAPIInstance handle BaseApiExceptions raises inside functions.
+
+        Args:
+            app: ``FastAPI`` application instance
+
+        Returns: None
+        """
+
+        app.add_exception_handler(BaseAPIException, handle_api_exceptions)
+
+    @staticmethod
+    def __register_cors_origins(app: FastAPITypes.FastAPIInstance) -> None:
+        """Register cors origins."""
+
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+
+    @staticmethod
+    def _register_socket_io(
+        app: FastAPITypes.FastAPIInstance,
+        socket_server: SocketServer,
+    ) -> None:
+        """Register socket io."""
+
+        app.mount("/", app=socket_server.app)
+
+    def _register_middlewares(self, app) -> None:
+        """Apply routes middlewares."""
+
+        self.__register_cors_origins(app)
+
+    @staticmethod
+    def __filter_logs(endpoint: str) -> None:
+        """Filter ignore /metrics in uvicorn logs."""
+        logging.getLogger("uvicorn.access").addFilter(EndpointFilter(endpoint=endpoint))

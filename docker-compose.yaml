@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+      - postgres
+      - migrations
+    ports:
+      - ${API_SERVER_PORT}:5000
+    networks:
+      - chatNet
+
+    command: [
+      "poetry", "run", "uvicorn", "app:create_app",
+      "--host", "0.0.0.0",
+      "--port", '5000',
+    ]
+
+  postgres:
+    build:
+      context: .
+      dockerfile: docker/postgresql/Dockerfile
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_DATABASES="test_${POSTGRES_DATABASE_NAME}","${POSTGRES_DATABASE_NAME}"
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - ${POSTGRES_DATA_VOLUME}:/var/lib/postgresql/data/pgdata
+    networks:
+      - chatNet
+
+  migrations:
+    build:
+      context: .
+      dockerfile: docker/migrations/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+      - postgres
+    networks:
+      - chatNet
+    command: [
+        "bash", "./scripts/wait-for-server.sh", "postgres:5432", "-t", "120",
+        "--",
+        "poetry", "run", "python", "-m", "scripts.migrate"
+    ]
+
+
+networks:
+  chatNet:
+    name: chatNet
+    driver: bridge

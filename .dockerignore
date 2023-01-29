@@ -1,0 +1,14 @@
+.venv
+venv
+eks
+k8s
+docs
+pipenv
+.pytest_cache
+README.md
+docker
+tests
+data
+.DS_Store
+.idea
+__pycache__
