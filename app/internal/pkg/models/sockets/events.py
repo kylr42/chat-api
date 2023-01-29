@@ -1,7 +1,7 @@
 """Model for contain ``APIRouter`` instance."""
 
 from dataclasses import dataclass
-from typing import Tuple
+from typing import Callable, Tuple
 
 from socketio import AsyncServer
 
@@ -17,3 +17,7 @@ class Events:
     def register_events(self, server: AsyncServer):
         for router in self.events:
             router.server = server
+
+    def register_middleware(self, middleware: Callable):
+        for router in self.events:
+            router.register_middleware(middleware)

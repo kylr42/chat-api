@@ -163,7 +163,9 @@ class JwtAuthBase(ABC):
         cookie: Optional[APIKeyCookie],
     ) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
         token: Optional[str] = None
-        if bearer:
+        if isinstance(bearer, str):
+            token = bearer
+        elif bearer:
             token = str(bearer.credentials)  # type: ignore
         elif cookie:
             token = str(cookie)

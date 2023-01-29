@@ -3,6 +3,9 @@ from typing import Optional
 from socketio import ASGIApp, AsyncServer
 
 from app.internal.events import __events__
+from app.internal.pkg.middlewares.handle_socket_exceptions import (
+    handle_internal_socket_exceptions,
+)
 
 __all__ = ["SocketServer"]
 
@@ -14,6 +17,7 @@ class SocketServer:
     __app: Optional[ASGIApp] = None
 
     def __init__(self):
+        self.__register_middlewares()
         self.__register_events()
 
     @property
@@ -39,3 +43,8 @@ class SocketServer:
     def __register_events(self):
         """Register socket events."""
         __events__.register_events(self.server)
+
+    @staticmethod
+    def __register_middlewares():
+        """Register socket middleware."""
+        __events__.register_middleware(handle_internal_socket_exceptions)

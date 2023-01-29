@@ -95,7 +95,9 @@ class UserRepository(Repository):
             return await cur.fetchone()
 
     @collect_response
-    async def update_user_status(self, cmd: models.UpdateUserStatusCommand) -> models.User:
+    async def update_user_status(
+        self, cmd: models.UpdateUserStatusCommand
+    ) -> models.User:
         q = """
             update users
                 set is_active = %(is_active)s
