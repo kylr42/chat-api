@@ -7,7 +7,7 @@ from dependency_injector.wiring import Provide, inject
 from yoyo import get_backend, read_migrations
 
 from app.configuration import __containers__
-from app.internal.services import Services, UserService
+from app.internal import services
 from app.pkg import connectors, models
 from app.pkg.connectors import Connectors, postgresql
 from app.pkg.models.base import BaseAPIException
@@ -45,7 +45,9 @@ def _reload(backend, migrations):
 
 @inject
 async def insert_default_user(
-    user_service: UserService = Provide[Services.user_service],
+    user_service: services.user.UserService = Provide[
+        services.Services.user_service
+    ],
 ) -> models.User:
     try:
         user = await user_service.read_specific_user_by_username(
@@ -64,11 +66,23 @@ async def insert_default_user(
     return user
 
 
+@inject
+async def insert_message_types(
+    message_type_service: services.message_type.MessageTypeService = Provide[
+        services.Services.message_type_service
+    ],
+) -> None:
+    async for message_type in message_type_service.create_all_message_types():
+        if isinstance(message_type, BaseAPIException):
+            print(f"ERROR ON INSERT: {message_type}")
+
+
 async def inserter() -> None:
     """Function for pre-insert data before running main application instance"""
 
     inserters = [
         insert_default_user(),
+        insert_message_types(),
     ]
 
     await asyncio.gather(*inserters)

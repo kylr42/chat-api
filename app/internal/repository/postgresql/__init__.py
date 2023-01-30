@@ -4,6 +4,8 @@ from .refresh_tokens import JWTRefreshTokenRepository
 from .room import RoomRepository
 from .user import UserRepository
 from .user_room_mapping import UserRoomMappingRepository
+from .message_type import MessageTypeRepository
+from .message import MessageRepository
 
 __all__ = [
     "Repositories",
@@ -19,3 +21,5 @@ class Repositories(containers.DeclarativeContainer):
     refresh_token_repository = providers.Factory(JWTRefreshTokenRepository)
     room_repository = providers.Factory(RoomRepository)
     user_room_mapping_repository = providers.Factory(UserRoomMappingRepository)
+    message_type_repository = providers.Factory(MessageTypeRepository)
+    message = providers.Factory(MessageRepository)

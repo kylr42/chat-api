@@ -17,5 +17,14 @@ steps = [
         """
             drop table if exists message_types; 
         """,
-    )
+    ), step(
+        """
+            alter table message_types
+            add constraint unique_name unique(name);
+        """,
+        """
+            alter table message_types
+            drop constraint if exists unique_name;
+        """,
+    ),
 ]
