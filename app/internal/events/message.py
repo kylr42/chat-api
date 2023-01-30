@@ -63,7 +63,7 @@ async def read_message_handler(
     logger.info(f"{user_id}[{sid}] read message: {message['message_id']}")
 
     await message_service.read_message(
-        query=models.ReadMessageQuery(message_id=message["message_id"])
+        query=models.ReadMessageQuery(message_id=message["message_id"]),
     )
     await router.__server__.emit(
         "read-message",
@@ -95,7 +95,7 @@ async def delete_message_handler(
     logger.info(f"{user_id}[{sid}] deleted message: {message['message_id']}")
 
     await message_service.delete_message(
-        query=models.DeleteMessageCommand(message_id=message["message_id"])
+        query=models.DeleteMessageCommand(message_id=message["message_id"]),
     )
     await router.__server__.emit(
         "delete-message",
@@ -130,7 +130,7 @@ async def edit_message_handler(
         cmd=models.UpdateMessageCommand(
             message_id=message["message_id"],
             text=message.get("content", ""),
-        )
+        ),
     )
     await router.__server__.emit(
         "edit-message",
@@ -166,7 +166,7 @@ async def get_messages_handler(
             room_id=message["room_id"],
             limit=message.get("limit", 10),
             offset=message.get("offset", 0),
-        )
+        ),
     )
     await router.__server__.emit(
         "get-messages",

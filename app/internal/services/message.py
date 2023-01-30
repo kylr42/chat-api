@@ -1,8 +1,8 @@
 from typing import List
 
+from app.internal.repository.postgresql import message
 from app.internal.repository.repository import BaseRepository
 from app.pkg import models
-from app.internal.repository.postgresql import message
 
 __all__ = ["MessageService"]
 

@@ -1,8 +1,8 @@
 from pydantic.fields import Field
 from pydantic.types import PositiveInt
 
-from app.pkg.models.message_type import MessageType
 from app.pkg.models.base import BaseModel
+from app.pkg.models.message_type import MessageType
 
 __all__ = [
     "Message",
@@ -25,7 +25,10 @@ class MessageFields:
     room_id = Field(description="Message room_id", example=1)
 
     text = Field(description="Message text", example="Hello world!")
-    message_type_name = Field(description="Message message_type", example=MessageType.TEXT.value)
+    message_type_name = Field(
+        description="Message message_type",
+        example=MessageType.TEXT.value,
+    )
     message_type_id = Field(description="Message message_type_id", example=1, default=1)
 
     limit = Field(description="Limit of messages", example=10, default=10)
