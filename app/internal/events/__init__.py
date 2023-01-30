@@ -1,4 +1,4 @@
-from app.internal.events import room, connect
+from app.internal.events import connect, room
 from app.internal.pkg.models.sockets import Events
 
 __all__ = ["__events__"]

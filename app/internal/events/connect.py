@@ -31,7 +31,7 @@ async def connect(
         sid=sid,
         session={
             "user_id": access_token.subject["user_id"],
-        }
+        },
     )
 
 

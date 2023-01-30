@@ -12,7 +12,11 @@ class RoomService:
     repository: RoomRepository
     user_room_mapping_repository: UserRoomMappingRepository
 
-    def __init__(self, room_repository: typing.Type[BaseRepository], user_room_mapping_repository: typing.Type[BaseRepository]):
+    def __init__(
+        self,
+        room_repository: typing.Type[BaseRepository],
+        user_room_mapping_repository: typing.Type[BaseRepository],
+    ):
         self.repository = room_repository
         self.user_room_mapping_repository = user_room_mapping_repository
 
@@ -28,13 +32,13 @@ class RoomService:
             cmd=models.CreateRoomCommand(
                 name=cmd.name,
                 description=cmd.description,
-            )
+            ),
         )
         room_user_mapping = await self.user_room_mapping_repository.create(
             cmd=models.CreateUserRoomMappingCommand(
                 user_id=cmd.user_id,
                 room_id=room.id,
-            )
+            ),
         )
         return models.Room(
             id=room.id,
@@ -44,7 +48,9 @@ class RoomService:
             is_favorite=room_user_mapping.is_favorite,
         )
 
-    async def read_all_user_rooms(self, query: models.ReadAllUserRoomsQuery) -> List[models.Room]:
+    async def read_all_user_rooms(
+        self, query: models.ReadAllUserRoomsQuery
+    ) -> List[models.Room]:
         """Read all user rooms from repository.
 
         Args:
@@ -54,7 +60,9 @@ class RoomService:
         """
         return await self.repository.read_all_user_rooms(query=query)
 
-    async def read_specific_room_by_id(self, query: models.ReadRoomByIdQuery) -> models.Room:
+    async def read_specific_room_by_id(
+        self, query: models.ReadRoomByIdQuery
+    ) -> models.Room:
         """Read specific room from repository by room id.
 
         Args:
@@ -74,7 +82,10 @@ class RoomService:
         """
         return await self.repository.update(cmd=cmd)
 
-    async def update_status_room(self, cmd: models.UpdateUserRoomMappingStatusCommand) -> models.Room:
+    async def update_status_room(
+        self,
+        cmd: models.UpdateUserRoomMappingStatusCommand,
+    ) -> models.Room:
         """Update status room in repository.
 
         Args:
@@ -82,8 +93,12 @@ class RoomService:
 
         Returns: `Room` model.
         """
-        user_room_mapping = await self.user_room_mapping_repository.update_room_status(cmd=cmd)
-        return await self.repository.read(query=models.ReadRoomByIdQuery(id=user_room_mapping.room_id))
+        user_room_mapping = await self.user_room_mapping_repository.update_room_status(
+            cmd=cmd,
+        )
+        return await self.repository.read(
+            query=models.ReadRoomByIdQuery(id=user_room_mapping.room_id),
+        )
 
     async def delete_room(self, cmd: models.DeleteRoomCommand) -> models.Room:
         """Delete room in repository.
@@ -94,11 +109,11 @@ class RoomService:
         Returns: `Room` model.
         """
         user_room_mappings = await self.user_room_mapping_repository.read_by_room_id(
-            query=models.ReadUserRoomMappingByRoomIdQuery(room_id=cmd.id)
+            query=models.ReadUserRoomMappingByRoomIdQuery(room_id=cmd.id),
         )
         for user_room_mapping in user_room_mappings:
             await self.user_room_mapping_repository.delete(
-                cmd=models.DeleteUserRoomMappingCommand(id=user_room_mapping.id)
+                cmd=models.DeleteUserRoomMappingCommand(id=user_room_mapping.id),
             )
 
         return await self.repository.delete(cmd=cmd)
@@ -115,16 +130,19 @@ class RoomService:
             cmd=models.CreateUserRoomMappingCommand(
                 user_id=cmd.user_id,
                 room_id=cmd.room_id,
-            )
+            ),
         )
         return await self.repository.read(
             query=models.ReadRoomByIdQuery(
                 id=cmd.room_id,
                 user_id=cmd.user_id,
-            )
+            ),
         )
 
-    async def read_all_rooms_of_user(self, query: models.ReadAllUserRoomsQuery) -> List[models.Room]:
+    async def read_all_rooms_of_user(
+        self,
+        query: models.ReadAllUserRoomsQuery,
+    ) -> List[models.Room]:
         """Read all rooms of user from repository.
 
         Args:
@@ -135,7 +153,10 @@ class RoomService:
 
         return await self.repository.read_all_user_rooms(query=query)
 
-    async def update_user_room_mapping(self, cmd: models.UpdateUserRoomMappingCommand) -> models.UserRoomMapping:
+    async def update_user_room_mapping(
+        self,
+        cmd: models.UpdateUserRoomMappingCommand,
+    ) -> models.UserRoomMapping:
         """Update user room mapping in repository.
 
         Args:
@@ -145,7 +166,10 @@ class RoomService:
         """
         return await self.user_room_mapping_repository.update(cmd=cmd)
 
-    async def delete_user_room_mapping(self, cmd: models.DeleteUserRoomMappingCommand) -> models.UserRoomMapping:
+    async def delete_user_room_mapping(
+        self,
+        cmd: models.DeleteUserRoomMappingCommand,
+    ) -> models.UserRoomMapping:
         """Delete user room mapping in repository.
 
         Args:
@@ -154,4 +178,3 @@ class RoomService:
         Returns: `UserRoomMapping` model.
         """
         return await self.user_room_mapping_repository.delete(cmd=cmd)
-

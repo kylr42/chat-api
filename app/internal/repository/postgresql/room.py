@@ -30,9 +30,9 @@ class RoomRepository(Repository):
     async def read(self, query: models.ReadRoomByIdQuery) -> models.Room:
         q = """
             with room_status as (
-                select 
-                    room_id, is_archived, is_favorite 
-                from user_room_mapping 
+                select
+                    room_id, is_archived, is_favorite
+                from user_room_mapping
                 where room_id = %(id)s and user_id = %(user_id)s
             )
             select
@@ -51,7 +51,9 @@ class RoomRepository(Repository):
             return test
 
     @collect_response
-    async def read_all_user_rooms(self, query: models.ReadAllUserRoomsQuery) -> List[models.Room]:
+    async def read_all_user_rooms(
+        self, query: models.ReadAllUserRoomsQuery
+    ) -> List[models.Room]:
         q = """
             select
                 rooms.id as id,
@@ -74,12 +76,12 @@ class RoomRepository(Repository):
     async def update(self, cmd: models.UpdateRoomCommand) -> models.Room:
         q = """
             with rs as (
-                select 
+                select
                     is_archived, is_favorite
                  where room_id = %(id)s and user_id = %(user_id)s
             )
             update rooms
-                set 
+                set
                     name = %(name)s,
                     description = %(description)s
                 where id = %(id)s

@@ -13,7 +13,10 @@ __all__ = ["UserRoomMappingRepository"]
 
 class UserRoomMappingRepository(Repository):
     @collect_response
-    async def create(self, cmd: models.CreateUserRoomMappingCommand) -> models.UserRoomMapping:
+    async def create(
+        self,
+        cmd: models.CreateUserRoomMappingCommand,
+    ) -> models.UserRoomMapping:
         q = """
             insert into user_room_mapping(
                 user_id, room_id
@@ -28,7 +31,10 @@ class UserRoomMappingRepository(Repository):
             return await cur.fetchone()
 
     @collect_response
-    async def read(self, query: models.ReadUserRoomMappingByIdQuery) -> models.UserRoomMapping:
+    async def read(
+        self,
+        query: models.ReadUserRoomMappingByIdQuery,
+    ) -> models.UserRoomMapping:
         q = """
             select
                 id,
@@ -59,7 +65,10 @@ class UserRoomMappingRepository(Repository):
             return await cur.fetchall()
 
     @collect_response
-    async def read_all_user_rooms(self, query: models.ReadUserRoomMappingByUserIdQuery) -> List[models.UserRoomMapping]:
+    async def read_all_user_rooms(
+        self,
+        query: models.ReadUserRoomMappingByUserIdQuery,
+    ) -> List[models.UserRoomMapping]:
         q = """
             select
                 id, user_id, room_id, is_archived, is_favorite
@@ -74,10 +83,13 @@ class UserRoomMappingRepository(Repository):
         raise NotImplementedError
 
     @collect_response
-    async def update(self, cmd: models.UpdateUserRoomMappingCommand) -> models.UserRoomMapping:
+    async def update(
+        self,
+        cmd: models.UpdateUserRoomMappingCommand,
+    ) -> models.UserRoomMapping:
         q = """
             update user_room_mapping
-                set 
+                set
                     chat_id = %(chat_id)s,
                     room_id = %(room_id)s
                 where id = %(id)s
@@ -89,7 +101,8 @@ class UserRoomMappingRepository(Repository):
 
     @collect_response
     async def update_room_status(
-        self, cmd: models.UpdateUserRoomMappingStatusCommand
+        self,
+        cmd: models.UpdateUserRoomMappingStatusCommand,
     ) -> models.UserRoomMapping:
         q = """
             update user_room_mapping
@@ -104,7 +117,10 @@ class UserRoomMappingRepository(Repository):
             return await cur.fetchone()
 
     @collect_response
-    async def delete(self, cmd: models.DeleteUserRoomMappingCommand) -> models.UserRoomMapping:
+    async def delete(
+        self,
+        cmd: models.DeleteUserRoomMappingCommand,
+    ) -> models.UserRoomMapping:
         q = """
             delete from user_room_mapping where id = %(id)s
             returning id, user_id, room_id, is_archived, is_favorite;

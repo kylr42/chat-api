@@ -70,4 +70,3 @@ class ReadRoomByIdQuery(BaseRoom):
 
 class ReadAllUserRoomsQuery(BaseRoom):
     user_id: PositiveInt = UserFields.id
-
