@@ -2,7 +2,7 @@ from typing import Callable
 
 from starlette import status
 
-from app.internal.events.chat import router
+from app.internal.events.room import router
 from app.pkg.logger import logger
 from app.pkg.models.base import BaseAPIException
 

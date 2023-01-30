@@ -10,7 +10,7 @@ steps = [
     step(
         """
             create table if not exists rooms(
-                id varchar primary key,
+                id serial primary key,
                 name text not null,
                 description text
             )

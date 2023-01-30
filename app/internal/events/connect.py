@@ -25,8 +25,14 @@ async def connect(
     except exceptions.jwt.WrongToken:
         raise UnAuthorized
 
-    logger.info(f"{sid}: connected, {access_token}")
-    await router.server.emit("join", {"sid": sid})
+    logger.info(f"{sid}: connected, {access_token.subject}")
+
+    await router.__server__.save_session(
+        sid=sid,
+        session={
+            "user_id": access_token.subject["user_id"],
+        }
+    )
 
 
 @router.on(event="disconnect")

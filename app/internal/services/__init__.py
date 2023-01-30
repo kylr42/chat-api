@@ -1,12 +1,13 @@
 from dependency_injector import containers, providers
 
 from app.internal.repository import Repositories, postgresql
-from app.internal.services import auth, user
+from app.internal.services import auth, user, room
 from app.internal.services.auth import AuthService
+from app.internal.services.room import RoomService
 from app.internal.services.user import UserService
 from app.pkg.settings import settings
 
-__all__ = ["Services", "auth", "user"]
+__all__ = ["Services", "auth", "user", "room"]
 
 
 class Services(containers.DeclarativeContainer):
@@ -27,4 +28,10 @@ class Services(containers.DeclarativeContainer):
         AuthService,
         user_service=user_service,
         refresh_token_repository=repositories.refresh_token_repository,
+    )
+
+    room_service = providers.Factory(
+        RoomService,
+        room_repository=repositories.room_repository,
+        user_room_mapping_repository=repositories.user_room_mapping_repository,
     )
