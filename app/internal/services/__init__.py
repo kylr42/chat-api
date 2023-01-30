@@ -1,7 +1,7 @@
 from dependency_injector import containers, providers
 
 from app.internal.repository import Repositories, postgresql
-from app.internal.services import auth, room, user, message_type, message
+from app.internal.services import auth, message, message_type, room, user
 from app.pkg.settings import settings
 
 __all__ = ["Services", "auth", "user", "room", "message_type", "message"]

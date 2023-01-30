@@ -19,7 +19,7 @@ class MessageRepository(Repository):
             ) values (
                 %(room_id)s, %(user_id)s, %(text)s, %(message_type_id)s
             )
-            returning 
+            returning
                 id, room_id, user_id, message as text, (
                     select name from message_types where id = 1
                 ) as message_type_name;
