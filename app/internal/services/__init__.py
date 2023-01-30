@@ -1,7 +1,7 @@
 from dependency_injector import containers, providers
 
 from app.internal.repository import Repositories, postgresql
-from app.internal.services import auth, user, room
+from app.internal.services import auth, room, user
 from app.internal.services.auth import AuthService
 from app.internal.services.room import RoomService
 from app.internal.services.user import UserService
