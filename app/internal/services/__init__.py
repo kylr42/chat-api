@@ -1,10 +1,10 @@
 from dependency_injector import containers, providers
 
 from app.internal.repository import Repositories, postgresql
-from app.internal.services import auth, room, user, message_type
+from app.internal.services import auth, room, user, message_type, message
 from app.pkg.settings import settings
 
-__all__ = ["Services", "auth", "user", "room", "message_type"]
+__all__ = ["Services", "auth", "user", "room", "message_type", "message"]
 
 
 class Services(containers.DeclarativeContainer):
@@ -36,4 +36,9 @@ class Services(containers.DeclarativeContainer):
     message_type_service = providers.Factory(
         message_type.MessageTypeService,
         message_type_repository=repositories.message_type_repository,
+    )
+
+    message_service = providers.Factory(
+        message.MessageService,
+        message_repository=repositories.message_repository,
     )

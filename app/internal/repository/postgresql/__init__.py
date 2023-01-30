@@ -22,4 +22,4 @@ class Repositories(containers.DeclarativeContainer):
     room_repository = providers.Factory(RoomRepository)
     user_room_mapping_repository = providers.Factory(UserRoomMappingRepository)
     message_type_repository = providers.Factory(MessageTypeRepository)
-    message = providers.Factory(MessageRepository)
+    message_repository = providers.Factory(MessageRepository)

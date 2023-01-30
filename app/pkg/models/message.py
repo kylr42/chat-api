@@ -26,6 +26,10 @@ class MessageFields:
 
     text = Field(description="Message text", example="Hello world!")
     message_type_name = Field(description="Message message_type", example=MessageType.TEXT.value)
+    message_type_id = Field(description="Message message_type_id", example=1, default=1)
+
+    limit = Field(description="Limit of messages", example=10, default=10)
+    offset = Field(description="Offset of messages", example=0, default=0)
 
 
 class BaseMessage(BaseModel):
@@ -45,6 +49,7 @@ class CreateMessageCommand(BaseMessage):
     user_id: PositiveInt = MessageFields.user_id
     room_id: PositiveInt = MessageFields.room_id
     text: str = MessageFields.text
+    message_type_id: PositiveInt = MessageFields.message_type_id
 
 
 class UpdateMessageCommand(BaseMessage):
@@ -63,3 +68,5 @@ class ReadMessageQuery(BaseMessage):
 
 class ReadAllRoomMessagesQuery(BaseMessage):
     room_id: PositiveInt = MessageFields.room_id
+    limit: PositiveInt = MessageFields.limit
+    offset: PositiveInt = MessageFields.offset
