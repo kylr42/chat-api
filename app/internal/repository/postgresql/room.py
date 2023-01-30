@@ -47,8 +47,7 @@ class RoomRepository(Repository):
         """
         async with get_connection() as cur:
             await cur.execute(q, query.to_dict())
-            test = await cur.fetchone()
-            return test
+            return await cur.fetchone()
 
     @collect_response
     async def read_all_user_rooms(
