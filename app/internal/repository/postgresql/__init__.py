@@ -3,6 +3,7 @@ from dependency_injector import containers, providers
 from .refresh_tokens import JWTRefreshTokenRepository
 from .room import RoomRepository
 from .user import UserRepository
+from .user_roles import UserRoleRepository
 from .user_room_mapping import UserRoomMappingRepository
 from .message_type import MessageTypeRepository
 from .message import MessageRepository
@@ -23,3 +24,4 @@ class Repositories(containers.DeclarativeContainer):
     user_room_mapping_repository = providers.Factory(UserRoomMappingRepository)
     message_type_repository = providers.Factory(MessageTypeRepository)
     message_repository = providers.Factory(MessageRepository)
+    user_role = providers.Factory(UserRoleRepository)

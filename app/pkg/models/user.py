@@ -3,6 +3,7 @@ from pydantic.types import PositiveInt
 
 from app.pkg.models.base import BaseModel
 from app.pkg.models.types import EncryptedSecretBytes
+from app.pkg.models.user_role import UserRoleFields, UserRole
 
 __all__ = [
     "User",
@@ -46,6 +47,7 @@ class UserFields:
         regex=r"^\+?1?\d{9,15}$",
     )
     is_active = Field(description="User is active.", example=True, default=False)
+    role_name = UserRoleFields.role_name
 
 
 class BaseUser(BaseModel):
@@ -58,6 +60,7 @@ class User(BaseUser):
     password: EncryptedSecretBytes = UserFields.password
     phone_number: str = UserFields.phone_number
     is_active: bool = UserFields.is_active
+    role_name: UserRole = UserFields.role_name
 
 
 # Commands.
@@ -66,6 +69,7 @@ class CreateUserCommand(BaseUser):
     password: EncryptedSecretBytes = UserFields.password
     phone_number: str = UserFields.phone_number
     is_active: bool = UserFields.is_active
+    role_name: UserRole = UserFields.role_name
 
 
 class UpdateUserCommand(BaseUser):
@@ -73,6 +77,7 @@ class UpdateUserCommand(BaseUser):
     username: str = UserFields.username
     password: EncryptedSecretBytes = UserFields.password
     phone_number: str = UserFields.phone_number
+    role_name: UserRole = UserFields.role_name
 
 
 class UpdateUserStatusCommand(BaseUser):

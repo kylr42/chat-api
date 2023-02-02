@@ -47,7 +47,7 @@ check: flake8 black_check docformatter_check safety bandit
 
 ## Migrate database
 migrate:
-	poetry run python -m scripts.migrate --config ./config/yoyo.ini
+	poetry run python -m scripts.migrate
 
 ## Rollback migrations in database
 migrate-rollback:

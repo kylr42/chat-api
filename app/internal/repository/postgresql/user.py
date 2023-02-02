@@ -15,14 +15,17 @@ class UserRepository(Repository):
     async def create(self, cmd: models.CreateUserCommand) -> models.User:
         q = """
             insert into users(
-                username, password, phone_number, is_active
+                username, password, phone_number, is_active, role_id
             ) values (
                 %(username)s,
                 %(password)s::bytea,
                 %(phone_number)s,
-                %(is_active)s
+                %(is_active)s,
+                (select id from user_roles where role_name = %(role_name)s)
             )
-            returning id, username, password, phone_number, is_active;
+            returning id, username, password, phone_number, is_active, (
+                select role_name from user_roles where role_name = %(role_name)s
+            );
         """
         async with get_connection() as cur:
             await cur.execute(q, cmd.to_dict(show_secrets=True))
@@ -36,8 +39,10 @@ class UserRepository(Repository):
                 username,
                 password,
                 phone_number,
-                is_active
+                is_active,
+                ur.role_name
             from users
+                left join user_roles ur on ur.id = users.role_id
             where users.id = %(id)s;
         """
         async with get_connection() as cur:
@@ -51,8 +56,9 @@ class UserRepository(Repository):
     ) -> models.User:
         q = """
             select
-                users.id, username, password, phone_number, is_active
+                users.id, username, password, phone_number, is_active, ur.role_name as role_name
             from users
+                left join user_roles ur on ur.id = users.role_id
             where username = %(username)s
         """
         async with get_connection() as cur:
@@ -67,8 +73,10 @@ class UserRepository(Repository):
                 username,
                 password,
                 phone_number,
-                is_active
-            from users;
+                is_active,
+                ur.role_name
+            from users
+                left join user_roles ur on ur.id = users.role_id;
         """
         async with get_connection() as cur:
             await cur.execute(q)
@@ -103,7 +111,9 @@ class UserRepository(Repository):
                 set is_active = %(is_active)s
                 where id = %(id)s
             returning
-                id, username, password, phone_number, is_active
+                id, username, password, phone_number, is_active, (
+                    select role_name from user_roles where id = users.role_id
+                );
         """
         async with get_connection() as cur:
             await cur.execute(q, cmd.to_dict(show_secrets=True))
@@ -113,7 +123,9 @@ class UserRepository(Repository):
     async def delete(self, cmd: models.DeleteUserCommand) -> models.User:
         q = """
             delete from users where id = %(id)s
-            returning id, username, password, phone_number, is_active;
+            returning id, username, password, phone_number, is_active, (
+                select role_name from user_roles where id = users.role_id
+            );
         """
         async with get_connection() as cur:
             await cur.execute(q, cmd.to_dict(show_secrets=True))

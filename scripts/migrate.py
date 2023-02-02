@@ -59,6 +59,7 @@ async def insert_default_user(
                 username=settings.API_DEFAULT_USERNAME,
                 password=settings.API_DEFAULT_PASSWORD.get_secret_value(),
                 phone_number=settings.API_DEFAULT_PHONE_NUMBER,
+                role_name=settings.API_DEFAULT_ROLE,
                 is_active=True,
             )
         )
@@ -77,8 +78,20 @@ async def insert_message_types(
             print(f"ERROR ON INSERT: {message_type}")
 
 
+@inject
+async def insert_default_roles(
+    role_service: services.user_roles.UserRoleService = Provide[
+        services.Services.user_role_service
+    ],
+) -> None:
+    async for role in role_service.create_all_user_roles():
+        if isinstance(role, BaseAPIException):
+            print(f"ERROR ON INSERT: {role}")
+
+
 async def inserter() -> None:
     """Function for pre-insert data before running main application instance"""
+    await insert_default_roles()
 
     inserters = [
         insert_default_user(),
