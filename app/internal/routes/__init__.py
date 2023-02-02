@@ -1,10 +1,10 @@
 """Global point for collected routers."""
 
 from app.internal.pkg.models import Routes
-from app.internal.routes import auth, user
+from app.internal.routes import auth, user, profile
 
 __all__ = ["__routes__"]
 
 
-__routes__ = Routes(routers=(user.router, auth.router))
+__routes__ = Routes(routers=(user.router, auth.router, profile.router))
 # TODO: Добавить документацию.

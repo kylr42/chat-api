@@ -8,3 +8,4 @@ from .refresh_token import *
 from .room import *
 from .user import *
 from .user_room_mapping import *
+from .profile import *
