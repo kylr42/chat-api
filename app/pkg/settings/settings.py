@@ -38,6 +38,8 @@ class Settings(_Settings):
     API_DEFAULT_PASSWORD: EncryptedSecretBytes
     #: str: Default user phone number.
     API_DEFAULT_PHONE_NUMBER: str
+    #: str: Default user role.
+    API_DEFAULT_ROLE: str
 
     #: str: Postgresql host.
     POSTGRES_HOST: str
