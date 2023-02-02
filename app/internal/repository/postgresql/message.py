@@ -63,24 +63,27 @@ class MessageRepository(Repository):
     @collect_response
     async def update(self, cmd: models.UpdateMessageCommand) -> models.Message:
         q = """
-            with mt as (
-                select id, name from message_types where id = %(message_type_id)s
-            )
             update messages
             set
                 text = %(text)s
             where id = %(id)s
-            returning id, room_id, user_id, message as text, mt.name as message_type_name;
+
+            returning id, room_id, user_id, message as text, (
+                select id, name from message_types where id = %(message_type_id)s
+            ) as message_type_name;
         """
         async with get_connection() as cur:
             await cur.execute(q, cmd.to_dict())
             return await cur.fetchone()
 
     @collect_response
-    async def delete(self, cmd: models.DeleteRoomCommand) -> models.Room:
+    async def delete(self, cmd: models.DeleteMessageCommand) -> models.Message:
         q = """
             delete from rooms
             where id = %(id)s
+            returning id, room_id, user_id, message as text, (
+                select name from message_types where id = 1
+            ) as message_type_name;
         """
         async with get_connection() as cur:
             await cur.execute(q, cmd.to_dict())

@@ -10,6 +10,7 @@ __all__ = [
     "ReadUserRoomMappingByIdQuery",
     "ReadUserRoomMappingByRoomIdQuery",
     "ReadUserRoomMappingByUserIdQuery",
+    "ReadUserRoomMappingByRoomIdAndUserIdQuery",
     "UpdateUserRoomMappingCommand",
     "UpdateUserRoomMappingStatusCommand",
     "AddUserToRoomCommand",
@@ -71,6 +72,11 @@ class ReadUserRoomMappingByIdQuery(BaseUserRoomMapping):
 
 class ReadUserRoomMappingByRoomIdQuery(BaseUserRoomMapping):
     room_id: PositiveInt = UserRoomMappingFields.room_id
+
+
+class ReadUserRoomMappingByRoomIdAndUserIdQuery(BaseUserRoomMapping):
+    room_id: PositiveInt = UserRoomMappingFields.room_id
+    user_id: PositiveInt = UserRoomMappingFields.user_id
 
 
 class ReadUserRoomMappingByUserIdQuery(BaseUserRoomMapping):

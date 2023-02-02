@@ -11,7 +11,7 @@ steps = [
         """
             create table if not exists messages(
                 id serial primary key,
-                message text not null,
+                content text not null,
 
                 created_at timestamp default now() not null,
                 updated_at timestamp default now() not null,

@@ -1,9 +1,13 @@
 from typing import List
 
-from app.internal.repository.postgresql import message
+from app.internal.repository.postgresql import message, user_room_mapping
 from app.internal.repository.repository import BaseRepository
 from app.pkg import models
 
+from app.pkg.models.exceptions.message import MessageDoesNotBelongToUser
+
+from app.pkg.models.exceptions.repository import EmptyResult
+from app.pkg.models.exceptions.room import RoomDoesNotExist
 __all__ = ["MessageService"]
 
 
@@ -11,8 +15,12 @@ class MessageService:
     #: message.MessageRepository: MessageRepository repository implementation.
     repository: message.MessageRepository
 
-    def __init__(self, message_repository: BaseRepository):
+    #: message.UserRoomMappingRepository: UserRoomMappingRepository repository implementation.
+    user_room_mapping_repository: user_room_mapping.UserRoomMappingRepository
+
+    def __init__(self, message_repository: BaseRepository, user_room_mapping_repository: BaseRepository):
         self.repository = message_repository
+        self.user_room_mapping_repository = user_room_mapping_repository
 
     async def create_message(
         self,
@@ -26,6 +34,15 @@ class MessageService:
         Returns:
             models.Message: Message model.
         """
+        try:
+            __user_room_mapping = await self.user_room_mapping_repository.read_by_room_id_and_user_id(
+                query=models.ReadUserRoomMappingByRoomIdAndUserIdQuery(
+                    room_id=cmd.room_id,
+                ),
+            )
+        except EmptyResult:
+            raise RoomDoesNotExist
+
         return await self.repository.create(cmd=cmd)
 
     async def read_message(
@@ -54,6 +71,15 @@ class MessageService:
         Returns:
             List[models.Message]: List of Message models.
         """
+        try:
+            __user_room_mapping = await self.user_room_mapping_repository.read_by_room_id_and_user_id(
+                query=models.ReadUserRoomMappingByRoomIdAndUserIdQuery(
+                    room_id=query.room_id,
+                ),
+            )
+        except EmptyResult:
+            raise RoomDoesNotExist
+
         return await self.repository.read_all_room_messages(query=query)
 
     async def update_message(
@@ -69,3 +95,21 @@ class MessageService:
             models.Message: Message model.
         """
         return await self.repository.update(cmd=cmd)
+
+    async def delete_message(
+        self,
+        cmd: models.DeleteMessageCommand,
+    ) -> models.Message:
+        """Service for deleting message from database.
+
+        Args:
+            cmd (models.DeleteMessageCommand): DeleteMessageCommand command.
+
+        Returns:
+            models.Message: Message model.
+        """
+        __message = await self.repository.read(query=models.ReadMessageQuery(id=cmd.id))
+        if __message.user_id != cmd.user_id:
+            raise MessageDoesNotBelongToUser
+
+        return await self.repository.delete(cmd=cmd)

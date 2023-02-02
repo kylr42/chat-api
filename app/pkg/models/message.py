@@ -24,7 +24,7 @@ class MessageFields:
     room = Field(description="Message room", example="42")
     room_id = Field(description="Message room_id", example=1)
 
-    text = Field(description="Message text", example="Hello world!")
+    content = Field(description="Message text", example="Hello world!")
     message_type_name = Field(
         description="Message message_type",
         example=MessageType.TEXT.value,
@@ -43,7 +43,7 @@ class Message(BaseMessage):
     id: PositiveInt = MessageFields.id
     user_id: PositiveInt = MessageFields.user_id
     room_id: PositiveInt = MessageFields.room_id
-    text: str = MessageFields.text
+    content: str = MessageFields.content
     message_type_name: MessageType = MessageFields.message_type_name
 
 
@@ -51,17 +51,18 @@ class Message(BaseMessage):
 class CreateMessageCommand(BaseMessage):
     user_id: PositiveInt = MessageFields.user_id
     room_id: PositiveInt = MessageFields.room_id
-    text: str = MessageFields.text
+    content: str = MessageFields.content
     message_type_id: PositiveInt = MessageFields.message_type_id
 
 
 class UpdateMessageCommand(BaseMessage):
     id: PositiveInt = MessageFields.id
-    text: str = MessageFields.text
+    content: str = MessageFields.content
 
 
 class DeleteMessageCommand(BaseMessage):
     id: PositiveInt = MessageFields.id
+    user_id: PositiveInt = MessageFields.user_id
 
 
 # Query
@@ -73,3 +74,4 @@ class ReadAllRoomMessagesQuery(BaseMessage):
     room_id: PositiveInt = MessageFields.room_id
     limit: PositiveInt = MessageFields.limit
     offset: PositiveInt = MessageFields.offset
+    user_id: PositiveInt = MessageFields.user_id

@@ -20,7 +20,7 @@ class RoomService:
         self.repository = room_repository
         self.user_room_mapping_repository = user_room_mapping_repository
 
-    async def create_room(self, cmd: models.CreateRoomRequest) -> models.Room:
+    async def create_room(self, cmd: models.CreateRoomCommand) -> models.Room:
         """Method for create room.
 
         Args:

@@ -10,7 +10,6 @@ __all__ = [
     "Room",
     "RoomFields",
     "CreateRoomCommand",
-    "CreateRoomRequest",
     "ReadRoomByIdQuery",
     "ReadAllUserRoomsQuery",
     "UpdateRoomCommand",
@@ -42,13 +41,8 @@ class Room(BaseRoom):
 # Commands.
 class CreateRoomCommand(BaseRoom):
     name: str = RoomFields.name
-    description: Optional[str] = RoomFields.description
-
-
-class CreateRoomRequest(BaseRoom):
-    name: str = RoomFields.name
-    description: Optional[str] = RoomFields.description
     user_id: PositiveInt = UserFields.id
+    description: Optional[str] = RoomFields.description
 
 
 class UpdateRoomCommand(BaseRoom):
