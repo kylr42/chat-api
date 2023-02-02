@@ -41,7 +41,7 @@ async def auth_user(
     user = await auth_service.check_user_password(cmd=cmd)
 
     at = access.create_access_token(
-        subject={"user_id": user.id},
+        subject={"user_id": user.id, "scopes": [user.role_name]},
     )
 
     # TODO: raise EmptyResult and raising UnAuthorized.
@@ -60,6 +60,7 @@ async def auth_user(
         subject={
             "user_id": user.id,
             "fingerprint": cmd.fingerprint.get_secret_value(),
+            "scopes": [user.role_name],
         },
     )
     await auth_service.create_refresh_token(
@@ -100,9 +101,19 @@ async def create_new_token_pair(
         ),
     )
 
-    at = access.create_access_token(subject={"user_id": user_id})
+    at = access.create_access_token(
+        subject={
+            "user_id": user_id,
+            "fingerprint": fingerprint,
+            "scopes": credentials.subject.get("scopes"),
+        }
+    )
     rt = refresh.create_refresh_token(
-        subject={"user_id": user_id, "fingerprint": fingerprint},
+        subject={
+            "user_id": user_id,
+            "fingerprint": fingerprint,
+            "scopes": credentials.subject.get("scopes"),
+        },
     )
 
     irt = await auth_service.update_refresh_token(

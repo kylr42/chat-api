@@ -2,11 +2,13 @@ from datetime import timedelta
 from typing import Optional, Set
 
 from fastapi import Security
+from fastapi.security import SecurityScopes
 from jose import jwt
 from pydantic import SecretStr
 
 from app.pkg.jwt.base import JwtAuthBase
 from app.pkg.jwt.credentionals import JwtAuthorizationCredentials
+from app.pkg.models.exceptions.auth import PermissionDenied
 from app.pkg.models.types import NotEmptySecretStr
 
 __all__ = ["JwtAccessBearer"]
@@ -70,6 +72,17 @@ class JwtAccessBearer(JwtAccess):
 
     async def __call__(
         self,
+        security_scopes: SecurityScopes = SecurityScopes(),
         bearer: JwtAuthBase.JwtAccessBearer = Security(JwtAccess._bearer),
     ) -> Optional[JwtAuthorizationCredentials]:
-        return await self._get_credentials(bearer=bearer, cookie=None)
+        credentials = await self._get_credentials(bearer=bearer, cookie=None)
+
+        if not security_scopes.scopes:
+            return credentials
+        if not await self.__is_allowed_scope(security_scopes, credentials):
+            raise PermissionDenied
+        return credentials
+
+    @staticmethod
+    async def __is_allowed_scope(security_scopes: SecurityScopes, credentials: JwtAuthorizationCredentials) -> bool:
+        return any(item in security_scopes.scopes for item in credentials.subject.get("scopes"))

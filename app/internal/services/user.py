@@ -94,6 +94,20 @@ class UserService:
         user.password = cmd.new_password
         return await self.repository.update(cmd=user.migrate(models.UpdateUserCommand))
 
+    async def update_specific_user(
+        self,
+        cmd: models.UpdateUserCommand,
+    ) -> models.User:
+        """Update specific user by user id.
+
+        Args:
+            cmd: `UpdateUserCommand`.
+
+        Returns: `User` model.
+        """
+
+        return await self.repository.update(cmd=cmd)
+
     async def delete_specific_user(self, cmd: models.DeleteUserCommand) -> models.User:
         """Delete specific user by user id.
 

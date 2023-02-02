@@ -8,7 +8,7 @@ from app.internal.services.user import UserService
 from app.pkg import models
 from app.pkg.jwt import JwtAuthorizationCredentials, access_security
 
-router = APIRouter(prefix="/user", tags=["User"])
+router = APIRouter(prefix="/user/me", tags=["User profile"])
 
 
 @router.post(
@@ -19,55 +19,40 @@ router = APIRouter(prefix="/user", tags=["User"])
     response_model_exclude={"password"},
 )
 @inject
-async def create_user(
-    cmd: models.CreateUserCommand,
+async def create_user_profile(
+    cmd: models.CreateUserProfileCommand,
     user_service: UserService = Depends(Provide[Services.user_service]),
-    _: JwtAuthorizationCredentials = Security(access_security, scopes=[models.UserRole.ADMIN.value]),
 ):
     return await user_service.create_user(
         cmd=models.CreateUserCommand(
             username=cmd.username,
             password=cmd.password.get_secret_value(),
             phone_number=cmd.phone_number,
-        )
+        ),
     )
 
 
 @router.get(
     "/",
-    response_model=List[models.User],
-    status_code=status.HTTP_200_OK,
-    response_model_exclude={"password"},
-    description="Get all users without password field",
-)
-@inject
-async def read_all_users(
-    user_service: UserService = Depends(Provide[Services.user_service]),
-    _: JwtAuthorizationCredentials = Security(access_security, scopes=[models.UserRole.ADMIN.value], ),
-):
-    return await user_service.read_all_users()
-
-
-@router.get(
-    "/{user_id:int}",
     response_model=models.User,
     status_code=status.HTTP_200_OK,
     response_model_exclude={"password"},
     description="Read specific user without password field",
 )
 @inject
-async def read_user(
-    user_id: int = models.UserFields.id,
+async def read_user_profile(
     user_service: UserService = Depends(Provide[Services.user_service]),
-    _: JwtAuthorizationCredentials = Security(access_security, scopes=[models.UserRole.ADMIN.value]),
+    credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
+    user_id = credentials.subject.get('user_id')
+
     return await user_service.read_specific_user_by_id(
         query=models.ReadUserByIdQuery(id=user_id),
     )
 
 
 @router.put(
-    "/{user_id:int}",
+    "/",
     response_model=models.User,
     status_code=status.HTTP_200_OK,
     response_model_exclude={"password"},
@@ -75,23 +60,27 @@ async def read_user(
 )
 @inject
 async def update_user(
-    cmd: models.UpdateUserCommand,
-    user_id: int = models.UserFields.id,
+    cmd: models.UpdateUserProfileCommand,
     user_service: UserService = Depends(Provide[Services.user_service]),
-    _: JwtAuthorizationCredentials = Security(access_security, scopes=[models.UserRole.ADMIN.value]),
+    credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
+    user_id = credentials.subject.get('user_id')
+    user = await user_service.read_specific_user_by_id(
+        query=models.ReadUserByIdQuery(id=user_id),
+    )
+
     return await user_service.update_specific_user(
         cmd=models.UpdateUserCommand(
             id=user_id,
             username=cmd.username,
-            password=cmd.password.get_secret_value(),
+            password=user.password.get_secret_value(),
             phone_number=cmd.phone_number,
-        )
+        ),
     )
 
 
 @router.delete(
-    "/{user_id:int}",
+    "/",
     response_model=List[models.User],
     status_code=status.HTTP_200_OK,
     response_model_exclude={"password"},
@@ -99,10 +88,11 @@ async def update_user(
 )
 @inject
 async def delete_user(
-    user_id: int = models.UserFields.id,
     user_service: UserService = Depends(Provide[Services.user_service]),
-    _: JwtAuthorizationCredentials = Security(access_security, scopes=[models.UserRole.ADMIN.value]),
+    credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
+    user_id = credentials.subject.get('user_id')
+
     return await user_service.delete_specific_user(
         cmd=models.DeleteUserCommand(id=user_id),
     )
