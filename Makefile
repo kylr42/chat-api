@@ -47,14 +47,14 @@ check: flake8 black_check docformatter_check safety bandit
 
 ## Migrate database
 migrate:
-	poetry run python -m scripts.migrate
+	poetry run python -m scripts.migrate --config ./config/yoyo.ini
 
 ## Rollback migrations in database
 migrate-rollback:
-	poetry run python -m scripts.migrate --rollback
+	poetry run python -m scripts.migrate --rollback --config ./config/yoyo.ini
 
 migrate-reload:
-	poetry run python -m scripts.migrate --reload
+	poetry run python -m scripts.migrate --reload --config ./config/yoyo.ini
 
 ## Sort imports
 isort:
@@ -83,12 +83,12 @@ docformatter_check:
 
 ## Check pep8
 flake8:
-	flake8 ${files_to_check}
+	flake8 ${files_to_check} --config ./config/setup.cfg
 
 
 ## Check typing
 mypy:
-	mypy ${files_to_check}
+	mypy ${files_to_check} --config ./config/setup.cfg
 
 
 ## Check if all dependencies are secure and do not have any known vulnerabilities
