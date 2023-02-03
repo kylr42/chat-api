@@ -9,7 +9,6 @@ from fastapi import FastAPI
 
 from app.configuration import __containers__
 from app.configuration.server import Server
-from app.configuration.sockets import SocketServer
 
 __all__ = ["create_app"]
 
@@ -17,4 +16,4 @@ __all__ = ["create_app"]
 def create_app() -> FastAPI:
     app = FastAPI()
     __containers__.wire_packages(app=app)
-    return Server(app, SocketServer()).get_app()
+    return Server(app).get_app()

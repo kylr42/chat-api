@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.configuration.events import on_startup
 from app.configuration.logger import EndpointFilter
-from app.configuration.sockets import SocketServer
 from app.internal.pkg.middlewares.handle_http_exceptions import handle_api_exceptions
 from app.internal.routes import __routes__
 from app.pkg.models.base import BaseAPIException
@@ -22,13 +21,12 @@ class Server:
     __app: FastAPI
     __app_name: str = settings.API_INSTANCE_APP_NAME
 
-    def __init__(self, app: FastAPI, socket_server: SocketServer):
+    def __init__(self, app: FastAPI):
         self.__app = app
         self._register_routes(app)
         self._register_events(app)
         self._register_middlewares(app)
         self._register_http_exceptions(app)
-        self._register_socket_io(app, socket_server)
 
     def get_app(self) -> FastAPI:
         """Get current application instance.
@@ -86,15 +84,6 @@ class Server:
             allow_methods=["*"],
             allow_headers=["*"],
         )
-
-    @staticmethod
-    def _register_socket_io(
-        app: FastAPITypes.FastAPIInstance,
-        socket_server: SocketServer,
-    ) -> None:
-        """Register socket io."""
-
-        app.mount("/", app=socket_server.app)
 
     def _register_middlewares(self, app) -> None:
         """Apply routes middlewares."""
