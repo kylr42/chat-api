@@ -28,12 +28,7 @@ class RoomService:
 
         Returns: `Room` model.
         """
-        room = await self.repository.create(
-            cmd=models.CreateRoomCommand(
-                name=cmd.name,
-                description=cmd.description,
-            ),
-        )
+        room = await self.repository.create(cmd=cmd)
         room_user_mapping = await self.user_room_mapping_repository.create(
             cmd=models.CreateUserRoomMappingCommand(
                 user_id=cmd.user_id,

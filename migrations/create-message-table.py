@@ -24,14 +24,5 @@ steps = [
         """
             drop table if exists messages 
         """,
-    ), step(
-        """
-            alter table messages
-                rename column message to text
-        """,
-        """
-            alter table messages
-                drop column if exists text
-        """,
-    )
+    ),
 ]

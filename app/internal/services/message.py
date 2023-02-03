@@ -38,6 +38,7 @@ class MessageService:
             __user_room_mapping = await self.user_room_mapping_repository.read_by_room_id_and_user_id(
                 query=models.ReadUserRoomMappingByRoomIdAndUserIdQuery(
                     room_id=cmd.room_id,
+                    user_id=cmd.user_id,
                 ),
             )
         except EmptyResult:
@@ -75,6 +76,7 @@ class MessageService:
             __user_room_mapping = await self.user_room_mapping_repository.read_by_room_id_and_user_id(
                 query=models.ReadUserRoomMappingByRoomIdAndUserIdQuery(
                     room_id=query.room_id,
+                    user_id=query.user_id,
                 ),
             )
         except EmptyResult:

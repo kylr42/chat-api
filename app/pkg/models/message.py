@@ -1,5 +1,5 @@
 from pydantic.fields import Field
-from pydantic.types import PositiveInt
+from pydantic.types import PositiveInt, NonNegativeInt
 
 from app.pkg.models.base import BaseModel
 from app.pkg.models.message_type import MessageType
@@ -72,6 +72,6 @@ class ReadMessageQuery(BaseMessage):
 
 class ReadAllRoomMessagesQuery(BaseMessage):
     room_id: PositiveInt = MessageFields.room_id
-    limit: PositiveInt = MessageFields.limit
-    offset: PositiveInt = MessageFields.offset
+    limit: NonNegativeInt = MessageFields.limit
+    offset: NonNegativeInt = MessageFields.offset
     user_id: PositiveInt = MessageFields.user_id

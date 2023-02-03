@@ -21,7 +21,7 @@ __all__ = ["router"]
 )
 @inject
 async def read_all_room_messages(
-    query: models.ReadAllRoomMessagesQuery,
+    query: models.ReadAllRoomMessagesQuery = Depends(),
     message_service: MessageService = Depends(Provide[Services.message_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
