@@ -1,7 +1,7 @@
 import json
 import logging.config
 
-from app.pkg.settings import settings
+from server.pkg.settings import settings
 
 __all__ = [
     "get_logger",

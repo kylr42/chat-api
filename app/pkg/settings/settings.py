@@ -62,7 +62,7 @@ class Settings(_Settings):
     #: StrictStr: Level of logging which outs in std
     LOGGER_LEVEL: pydantic.StrictStr
     #: pathlib.Path: Path of saving logs on local storage.
-    LOGGER_CONFIG_PATH: pathlib.Path
+    LOGGER_CONFIG_FILE: pathlib.Path
 
 
 @lru_cache()
