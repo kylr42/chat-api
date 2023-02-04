@@ -1,3 +1,5 @@
+"""Models package."""
+
 from .events import Events
 from .routes import SocketRoutes
 

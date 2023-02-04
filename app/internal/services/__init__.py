@@ -41,4 +41,5 @@ class Services(containers.DeclarativeContainer):
     message_service = providers.Factory(
         message.MessageService,
         message_repository=repositories.message_repository,
+        user_room_mapping_repository=repositories.user_room_mapping_repository,
     )

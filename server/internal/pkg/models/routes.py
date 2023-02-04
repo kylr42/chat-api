@@ -8,17 +8,15 @@ __all__ = ["SocketRoutes"]
 
 
 class SocketRoutes:
-    routes: List[str] = []
     __routes__: Dict[str, Any] = {}
-    __server__: Optional[AsyncServer] = None
     __middlewares__: List[Callable] = []
+    __server__: Optional[AsyncServer] = None
 
     def on(
         self,
         event: Optional[str] = None,
-        middlewares: Optional[List[Callable]] = None,
-        *args,
-        **kwargs,
+        *args: Tuple[Any],
+        **kwargs: Dict[str, Any],
     ) -> Callable:
         """Register socket event."""
 
@@ -26,16 +24,11 @@ class SocketRoutes:
             """Decorator for register socket event."""
             event_name = event or func.__name__
 
-            self.routes.append(event_name)
             self.__routes__[event_name] = {
-                "func": self.__register_middleware__(
-                    func=func,
-                    middlewares=middlewares,
-                ),
+                "func": func,
                 "args": args,
                 "kwargs": kwargs,
             }
-
             return func
 
         return decorator
@@ -55,14 +48,14 @@ class SocketRoutes:
 
         self.__server__ = server
 
-        for event in self.routes:
+        for event, value in self.__routes__.items():
             self.__server__.on(
                 event,
                 handler=self.__register_middleware__(
-                    func=self.__routes__[event]["func"],
+                    func=value["func"],
                 ),
-                *self.__routes__[event]["args"],
-                **self.__routes__[event]["kwargs"],
+                *value["args"],
+                **value["kwargs"],
             )
 
     def __register_middleware__(

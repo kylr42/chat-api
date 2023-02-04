@@ -9,7 +9,7 @@ __all__ = [
 
 
 def get_logger(name):
-    with open(settings.LOGGER_CONFIG_PATH, "r") as fd:
+    with open(settings.LOGGER_CONFIG_FILE, "r") as fd:
         logging.config.dictConfig(config=json.load(fd))
     logger = logging.getLogger(name)
     return logger

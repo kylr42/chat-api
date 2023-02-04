@@ -18,6 +18,7 @@ pydantic = "^1.10.4"
 yoyo-migrations = "^8.2.0"
 python-socketio = "^5.7.2"
 websockets = "^10.4"
+aiohttp = "^3.8.3"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0"

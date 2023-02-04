@@ -1,11 +1,13 @@
 from typing import Optional
 
-from socketio import ASGIApp, AsyncServer
+from aiohttp import web
+from socketio import AsyncServer
 
-from app.internal.events import __events__
-from app.internal.pkg.middlewares.handle_socket_exceptions import (
+from server.internal.pkg.middlewares.handle_socket_exceptions import (
     handle_internal_socket_exceptions,
 )
+from server.internal.routes import __events__
+from server.pkg.logger import logger
 
 __all__ = ["SocketServer"]
 
@@ -14,7 +16,7 @@ class SocketServer:
     """Socket server instance."""
 
     __server: Optional[AsyncServer] = None
-    __app: Optional[ASGIApp] = None
+    __app: Optional[web.Application] = None
 
     def __init__(self):
         self.__register_middlewares()
@@ -25,7 +27,6 @@ class SocketServer:
         """Get current socket server instance."""
         if not self.__server:
             self.__server = AsyncServer(
-                async_mode="asgi",
                 cors_allowed_origins=["*"],
             )
         return self.__server
@@ -34,9 +35,11 @@ class SocketServer:
     def app(self):
         """Get current socket app instance."""
         if not self.__app:
-            self.__app = ASGIApp(
-                socketio_server=self.server,
-                socketio_path="/socket.io",
+            self.__app = web.Application(
+                logger=logger,
+            )
+            self.server.attach(
+                app=self.__app,
             )
         return self.__app
 

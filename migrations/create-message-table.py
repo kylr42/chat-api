@@ -11,7 +11,7 @@ steps = [
         """
             create table if not exists messages(
                 id serial primary key,
-                message text not null,
+                content text not null,
 
                 created_at timestamp default now() not null,
                 updated_at timestamp default now() not null,
@@ -24,14 +24,5 @@ steps = [
         """
             drop table if exists messages 
         """,
-    ), step(
-        """
-            alter table messages
-                rename column message to text
-        """,
-        """
-            alter table messages
-                drop column if exists text
-        """,
-    )
+    ),
 ]

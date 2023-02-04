@@ -65,6 +65,22 @@ class UserRoomMappingRepository(Repository):
             return await cur.fetchall()
 
     @collect_response
+    async def read_by_room_id_and_user_id(
+        self,
+        query: models.ReadUserRoomMappingByRoomIdAndUserIdQuery,
+    ) -> models.UserRoomMapping:
+        q = """
+            select
+                id, user_id, room_id, is_archived, is_favorite
+            from user_room_mapping
+            where user_room_mapping.room_id = %(room_id)s
+                and user_room_mapping.user_id = %(user_id)s
+        """
+        async with get_connection() as cur:
+            await cur.execute(q, query.to_dict())
+            return await cur.fetchone()
+
+    @collect_response
     async def read_all_user_rooms(
         self,
         query: models.ReadUserRoomMappingByUserIdQuery,
