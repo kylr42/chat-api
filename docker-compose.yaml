@@ -27,6 +27,30 @@ services:
       "--port", '5000',
     ]
 
+  socker-server:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+    environment:
+      - CHAT_API_BASE_URL=http://api:5000
+    depends_on:
+      - postgres
+      - migrations
+      - api
+    ports:
+      - ${SOCKET_SERVER_PORT}:5000
+    networks:
+      - chatNet
+
+    command: [
+      "poetry", "run", "python", "-m", "run_server"
+    ]
+
   postgres:
     build:
       context: .
