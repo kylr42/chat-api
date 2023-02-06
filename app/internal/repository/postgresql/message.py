@@ -43,7 +43,8 @@ class MessageRepository(Repository):
 
     @collect_response
     async def read_all_room_messages(
-        self, query: models.ReadAllRoomMessagesQuery
+        self,
+        query: models.ReadAllRoomMessagesQuery,
     ) -> List[models.Message]:
         q = """
             select

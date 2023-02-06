@@ -3,11 +3,10 @@ from typing import List
 from app.internal.repository.postgresql import message, user_room_mapping
 from app.internal.repository.repository import BaseRepository
 from app.pkg import models
-
 from app.pkg.models.exceptions.message import MessageDoesNotBelongToUser
-
 from app.pkg.models.exceptions.repository import EmptyResult
 from app.pkg.models.exceptions.room import RoomDoesNotExist
+
 __all__ = ["MessageService"]
 
 
@@ -18,7 +17,11 @@ class MessageService:
     #: message.UserRoomMappingRepository: UserRoomMappingRepository repository implementation.
     user_room_mapping_repository: user_room_mapping.UserRoomMappingRepository
 
-    def __init__(self, message_repository: BaseRepository, user_room_mapping_repository: BaseRepository):
+    def __init__(
+        self,
+        message_repository: BaseRepository,
+        user_room_mapping_repository: BaseRepository,
+    ):
         self.repository = message_repository
         self.user_room_mapping_repository = user_room_mapping_repository
 
@@ -35,7 +38,7 @@ class MessageService:
             models.Message: Message model.
         """
         try:
-            __user_room_mapping = await self.user_room_mapping_repository.read_by_room_id_and_user_id(
+            await self.user_room_mapping_repository.read_by_room_id_and_user_id(
                 query=models.ReadUserRoomMappingByRoomIdAndUserIdQuery(
                     room_id=cmd.room_id,
                     user_id=cmd.user_id,
@@ -73,7 +76,7 @@ class MessageService:
             List[models.Message]: List of Message models.
         """
         try:
-            __user_room_mapping = await self.user_room_mapping_repository.read_by_room_id_and_user_id(
+            await self.user_room_mapping_repository.read_by_room_id_and_user_id(
                 query=models.ReadUserRoomMappingByRoomIdAndUserIdQuery(
                     room_id=query.room_id,
                     user_id=query.user_id,

@@ -23,7 +23,10 @@ class UserFields:
         regex=r"^\+?1?\d{9,15}$",
     )
     is_active = Field(description="User is active.", example=True, default=False)
-    access_token = Field(description="User access token.", example="example.access.token")
+    access_token = Field(
+        description="User access token.",
+        example="example.access.token",
+    )
 
 
 class BaseUser(BaseModel):

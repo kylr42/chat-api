@@ -84,5 +84,10 @@ class JwtAccessBearer(JwtAccess):
         return credentials
 
     @staticmethod
-    async def __is_allowed_scope(security_scopes: SecurityScopes, credentials: JwtAuthorizationCredentials) -> bool:
-        return any(item in security_scopes.scopes for item in credentials.subject.get("scopes"))
+    async def __is_allowed_scope(
+        security_scopes: SecurityScopes,
+        credentials: JwtAuthorizationCredentials,
+    ) -> bool:
+        return any(
+            item in security_scopes.scopes for item in credentials.subject.get("scopes")
+        )

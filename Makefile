@@ -2,8 +2,8 @@ include .env
 export
 
 # enumeration of * .py files storage or folders is required.
-files_to_fmt 	?= app tests
-files_to_check 	?= app tests
+files_to_fmt 	?= app server
+files_to_check 	?= app server
 
 # Sphinx settings
 SPHINX_BUILD 	?= sphinx-build
@@ -98,9 +98,9 @@ safety:
 
 ## Check code security
 bandit:
-	poetry run bandit -r ${files_to_check} -x tests
+	poetry run bandit -r ${files_to_check} -x app
 
 ## Add trailing comma works only on unix.
 # an error is expected on windows.
 add-trailing-comma:
-	find app tests -name "*.py" -exec poetry run add-trailing-comma '{}' --py36-plus \;
+	find app server -name "*.py" -exec poetry run add-trailing-comma '{}' --py36-plus \;

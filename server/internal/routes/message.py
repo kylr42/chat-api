@@ -3,7 +3,7 @@ from typing import Dict
 from dependency_injector.wiring import Provide, inject
 
 from server.internal.pkg.models import SocketRoutes
-from server.pkg import models, clients
+from server.pkg import clients, models
 from server.pkg.logger import logger
 
 router = SocketRoutes()
@@ -77,7 +77,7 @@ async def read_room_messages_handler(
                 "messages": [message.to_dict() for message in messages],
                 "limit": message.get("limit", 100),
                 "offset": message.get("offset", 0),
-           },
+            },
         },
         skip_sid=sid,
     )

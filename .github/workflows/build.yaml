@@ -42,7 +42,7 @@ jobs:
       - name: Build
         run: |
           docker build -t jsiona/chat-app:latest -f docker/api/Dockerfile .
-            docker push jsiona/chat-base:latest
+            docker push jsiona/chat-app:latest
           docker build -t jsiona/migrations-base:latest -f docker/migrations/Dockerfile .
             docker push jsiona/migrations-base:latest
           docker build -t jsiona/postgres-base:latest -f docker/postgresql/Dockerfile .
