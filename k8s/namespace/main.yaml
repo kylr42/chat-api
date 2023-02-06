@@ -5,4 +5,4 @@ kind: Namespace
 metadata:
   name: chat-app
   labels:
-    name: chat-app
+    name: chat
