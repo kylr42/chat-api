@@ -44,7 +44,8 @@ class RoomService:
         )
 
     async def read_all_user_rooms(
-        self, query: models.ReadAllUserRoomsQuery
+        self,
+        query: models.ReadAllUserRoomsQuery,
     ) -> List[models.Room]:
         """Read all user rooms from repository.
 
@@ -56,7 +57,8 @@ class RoomService:
         return await self.repository.read_all_user_rooms(query=query)
 
     async def read_specific_room_by_id(
-        self, query: models.ReadRoomByIdQuery
+        self,
+        query: models.ReadRoomByIdQuery,
     ) -> models.Room:
         """Read specific room from repository by room id.
 

@@ -1,0 +1,23 @@
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: chat-migration
+  namespace: chat-app
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      containers:
+        - name: migration-container
+          image: jsiona/migrations-base:latest
+          command: [
+            "bash", "./scripts/wait-for-server.sh", "postgres:5432", "-t", "120",
+            "--",
+            "poetry", "run", "python", "-m", "scripts.migrate"
+          ]
+          envFrom:
+            - secretRef:
+                name: migration-secret
+  backoffLimit: 15

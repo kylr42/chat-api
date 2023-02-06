@@ -2,8 +2,8 @@ include .env
 export
 
 # enumeration of * .py files storage or folders is required.
-files_to_fmt 	?= app tests
-files_to_check 	?= app tests
+files_to_fmt 	?= app server
+files_to_check 	?= app server
 
 # Sphinx settings
 SPHINX_BUILD 	?= sphinx-build
@@ -58,49 +58,49 @@ migrate-reload:
 
 ## Sort imports
 isort:
-	isort ${files_to_fmt}
+	poetry run isort ${files_to_fmt}
 
 
 ## Format code
 black:
-	black ${files_to_fmt}
+	poetry run black ${files_to_fmt}
 
 
 ## Check code formatting
 black_check:
-	black --check ${files_to_check}
+	poetry run black --check ${files_to_check}
 
 
 ## Format docstring PEP 257
 docformatter:
-	docformatter -ir ${files_to_fmt}
+	poetry run docformatter -ir ${files_to_fmt}
 
 
 ## Check docstring formatting
 docformatter_check:
-	docformatter -cr ${files_to_check}
+	poetry run docformatter -cr ${files_to_check}
 
 
 ## Check pep8
 flake8:
-	flake8 ${files_to_check} --config ./config/setup.cfg
+	poetry run flake8 ${files_to_check} --config ./config/setup.cfg
 
 
 ## Check typing
 mypy:
-	mypy ${files_to_check} --config ./config/setup.cfg
+	poetry run mypy ${files_to_check} --config ./config/setup.cfg
 
 
 ## Check if all dependencies are secure and do not have any known vulnerabilities
 safety:
-	safety check --full-report
+	poetry run safety check --full-report
 
 
 ## Check code security
 bandit:
-	bandit -r ${files_to_check} -x tests
+	poetry run bandit -r ${files_to_check} -x app
 
 ## Add trailing comma works only on unix.
 # an error is expected on windows.
 add-trailing-comma:
-	find app tests -name "*.py" -exec add-trailing-comma '{}' --py36-plus \;
+	find app server -name "*.py" -exec poetry run add-trailing-comma '{}' --py36-plus \;

@@ -22,14 +22,17 @@ router = APIRouter(prefix="/user", tags=["User"])
 async def create_user(
     cmd: models.CreateUserCommand,
     user_service: UserService = Depends(Provide[Services.user_service]),
-    _: JwtAuthorizationCredentials = Security(access_security, scopes=[models.UserRole.ADMIN.value]),
+    _: JwtAuthorizationCredentials = Security(
+        access_security,
+        scopes=[models.UserRole.ADMIN.value],
+    ),
 ):
     return await user_service.create_user(
         cmd=models.CreateUserCommand(
             username=cmd.username,
             password=cmd.password.get_secret_value(),
             phone_number=cmd.phone_number,
-        )
+        ),
     )
 
 
@@ -43,7 +46,10 @@ async def create_user(
 @inject
 async def read_all_users(
     user_service: UserService = Depends(Provide[Services.user_service]),
-    _: JwtAuthorizationCredentials = Security(access_security, scopes=[models.UserRole.ADMIN.value], ),
+    _: JwtAuthorizationCredentials = Security(
+        access_security,
+        scopes=[models.UserRole.ADMIN.value],
+    ),
 ):
     return await user_service.read_all_users()
 
@@ -59,7 +65,10 @@ async def read_all_users(
 async def read_user(
     user_id: int = models.UserFields.id,
     user_service: UserService = Depends(Provide[Services.user_service]),
-    _: JwtAuthorizationCredentials = Security(access_security, scopes=[models.UserRole.ADMIN.value]),
+    _: JwtAuthorizationCredentials = Security(
+        access_security,
+        scopes=[models.UserRole.ADMIN.value],
+    ),
 ):
     return await user_service.read_specific_user_by_id(
         query=models.ReadUserByIdQuery(id=user_id),
@@ -78,7 +87,10 @@ async def update_user(
     cmd: models.UpdateUserCommand,
     user_id: int = models.UserFields.id,
     user_service: UserService = Depends(Provide[Services.user_service]),
-    _: JwtAuthorizationCredentials = Security(access_security, scopes=[models.UserRole.ADMIN.value]),
+    _: JwtAuthorizationCredentials = Security(
+        access_security,
+        scopes=[models.UserRole.ADMIN.value],
+    ),
 ):
     return await user_service.update_specific_user(
         cmd=models.UpdateUserCommand(
@@ -86,7 +98,7 @@ async def update_user(
             username=cmd.username,
             password=cmd.password.get_secret_value(),
             phone_number=cmd.phone_number,
-        )
+        ),
     )
 
 
@@ -101,7 +113,10 @@ async def update_user(
 async def delete_user(
     user_id: int = models.UserFields.id,
     user_service: UserService = Depends(Provide[Services.user_service]),
-    _: JwtAuthorizationCredentials = Security(access_security, scopes=[models.UserRole.ADMIN.value]),
+    _: JwtAuthorizationCredentials = Security(
+        access_security,
+        scopes=[models.UserRole.ADMIN.value],
+    ),
 ):
     return await user_service.delete_specific_user(
         cmd=models.DeleteUserCommand(id=user_id),

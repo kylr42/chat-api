@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [main, development, stable]
+  push:
+    branches: [main, development, stable]
+
+jobs:
+  lint:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install
+      - name: Create .env
+        run: |
+          cp .env.example .env
+      - name: Lint with flake8
+        run: |
+          make lint
+
+#  test:
+    # Include the following line to run the job on a self-hosted runner
+
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: docker login
+        run: |
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      - name: Build
+        run: |
+          docker build -t jsiona/chat-app:${GITHUB_REF##*/} -f docker/api/Dockerfile .
+            docker push jsiona/chat-app:${GITHUB_REF##*/}
+          docker build -t jsiona/migrations-base:${GITHUB_REF##*/} -f docker/migrations/Dockerfile .
+            docker push jsiona/migrations-base:${GITHUB_REF##*/}
+          docker build -t jsiona/postgres-base:${GITHUB_REF##*/} -f docker/postgresql/Dockerfile .
+            docker push jsiona/postgres-base:${GITHUB_REF##*/}
