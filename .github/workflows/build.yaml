@@ -22,8 +22,8 @@ jobs:
       - name: Lint with flake8
         run: |
           make lint
-        
-  test:
+
+#  test:
     # Include the following line to run the job on a self-hosted runner
 
   build:
