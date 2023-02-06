@@ -1,8 +1,8 @@
 from pydantic.types import PositiveInt
 
-from app.pkg.models.user import UserFields
 from app.pkg.models.base import BaseModel
 from app.pkg.models.types import EncryptedSecretBytes
+from app.pkg.models.user import UserFields
 
 __all__ = [
     "UserProfile",

@@ -25,7 +25,7 @@ async def read_all_room_messages(
     message_service: MessageService = Depends(Provide[Services.message_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
-    query.user_id = credentials.subject.get('user_id')
+    query.user_id = credentials.subject.get("user_id")
 
     return await message_service.read_all_room_messages(
         query=query,
@@ -44,7 +44,7 @@ async def create_message(
     message_service: MessageService = Depends(Provide[Services.message_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
-    cmd.user_id = credentials.subject.get('user_id')
+    cmd.user_id = credentials.subject.get("user_id")
 
     return await message_service.create_message(cmd=cmd)
 
@@ -62,7 +62,10 @@ async def read_message(
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
     return await message_service.read_message(
-        query=models.ReadMessageQuery(id=message_id, user_id=credentials.subject.get('user_id')),
+        query=models.ReadMessageQuery(
+            id=message_id,
+            user_id=credentials.subject.get("user_id"),
+        ),
     )
 
 
@@ -78,7 +81,7 @@ async def update_message(
     message_service: MessageService = Depends(Provide[Services.message_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
-    cmd.user_id = credentials.subject.get('user_id')
+    cmd.user_id = credentials.subject.get("user_id")
 
     return await message_service.update_message(cmd=cmd)
 
@@ -96,5 +99,8 @@ async def delete_message(
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
     return await message_service.delete_message(
-        cmd=models.DeleteMessageCommand(id=message_id, user_id=credentials.subject.get('user_id')),
+        cmd=models.DeleteMessageCommand(
+            id=message_id,
+            user_id=credentials.subject.get("user_id"),
+        ),
     )

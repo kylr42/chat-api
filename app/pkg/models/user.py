@@ -3,7 +3,7 @@ from pydantic.types import PositiveInt
 
 from app.pkg.models.base import BaseModel
 from app.pkg.models.types import EncryptedSecretBytes
-from app.pkg.models.user_role import UserRoleFields, UserRole
+from app.pkg.models.user_role import UserRole, UserRoleFields
 
 __all__ = [
     "User",

@@ -1,5 +1,5 @@
 from pydantic.fields import Field
-from pydantic.types import PositiveInt, NonNegativeInt
+from pydantic.types import NonNegativeInt, PositiveInt
 
 from app.pkg.models.base import BaseModel
 from app.pkg.models.message_type import MessageType

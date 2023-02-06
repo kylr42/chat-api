@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List, Optional
 
 import pydantic
 
@@ -31,7 +31,9 @@ class RoomClient:
         )
         return models.Room.parse_obj(response)
 
-    async def read_all_rooms(self, query: models.ReadAllRoomsQuery) -> List[models.Room]:
+    async def read_all_rooms(
+        self, query: models.ReadAllRoomsQuery
+    ) -> List[models.Room]:
         response = await self.__client__.make_request(
             path="/room/",
             method="GET",

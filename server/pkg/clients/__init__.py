@@ -1,6 +1,6 @@
 from dependency_injector import containers, providers
 
-from server.pkg.clients.api import ChatApiClient, UserClient, RoomClient, MessageClient
+from server.pkg.clients.api import ChatApiClient, MessageClient, RoomClient, UserClient
 from server.pkg.settings import settings
 
 __all__ = ["ClientContainers"]

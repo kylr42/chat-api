@@ -44,7 +44,7 @@ async def read_user_profile(
     user_service: UserService = Depends(Provide[Services.user_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
-    user_id = credentials.subject.get('user_id')
+    user_id = credentials.subject.get("user_id")
 
     return await user_service.read_specific_user_by_id(
         query=models.ReadUserByIdQuery(id=user_id),
@@ -64,7 +64,7 @@ async def update_user(
     user_service: UserService = Depends(Provide[Services.user_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
-    user_id = credentials.subject.get('user_id')
+    user_id = credentials.subject.get("user_id")
     user = await user_service.read_specific_user_by_id(
         query=models.ReadUserByIdQuery(id=user_id),
     )
@@ -91,7 +91,7 @@ async def delete_user(
     user_service: UserService = Depends(Provide[Services.user_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
-    user_id = credentials.subject.get('user_id')
+    user_id = credentials.subject.get("user_id")
 
     return await user_service.delete_specific_user(
         cmd=models.DeleteUserCommand(id=user_id),

@@ -1,0 +1,53 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-deployment
+  namespace: chat-app
+  labels:
+    app: chat
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chat-app
+  template:
+    metadata:
+      labels:
+        app: chat-app
+    spec:
+      containers:
+        - image: jsiona/chat-base:latest
+          imagePullPolicy: Always
+          name: chat-app-container
+          command: [
+            "poetry", "run", "uvicorn", "app:create_app",
+            "--host", "0.0.0.0",
+            "--port", '5000',
+          ]
+          envFrom:
+          - secretRef:
+              name: chat-secret
+          ports:
+            - containerPort: 5000
+              name: fastapi
+          readinessProbe:
+            httpGet:
+              port: 5000
+              path: /docs
+            initialDelaySeconds: 15
+          livenessProbe:
+            httpGet:
+              port: 5000
+              path: /docs
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "0.5"
+            limits:
+              memory: "1Gi"
+              cpu: "1"

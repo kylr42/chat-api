@@ -8,19 +8,21 @@ __all__ = [
 
 
 class BadRequest(BaseAPIException):
-    """Internal Server Error"""
+    """Internal Server Error."""
+
     status_code = 400
     message = "Bad Request"
 
 
 class UnexpectedError(BaseAPIException):
-    """Internal Server Error"""
+    """Internal Server Error."""
+
     status_code = 500
     message = "Unexpected Error"
 
 
 class UnexpectedStatus(BaseAPIException):
-    """Internal Server Error"""
+    """Internal Server Error."""
+
     status_code = 500
     message = "Unexpected Status"
-

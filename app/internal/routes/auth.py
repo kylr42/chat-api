@@ -106,7 +106,7 @@ async def create_new_token_pair(
             "user_id": user_id,
             "fingerprint": fingerprint,
             "scopes": credentials.subject.get("scopes"),
-        }
+        },
     )
     rt = refresh.create_refresh_token(
         subject={

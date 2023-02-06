@@ -15,15 +15,22 @@ __all__ = [
 class RoomFields:
     id = Field(description="Room id.", example=2)
     name = Field(description="Room name.", example="Example Room")
-    description = Field(description="Room description.", example="Example Room Description")
+    description = Field(
+        description="Room description.",
+        example="Example Room Description",
+    )
     is_archived = Field(description="Room is archived.", example=False, default=False)
     is_favorite = Field(description="Room is favorite.", example=False, default=False)
-    access_token = Field(description="User access token.", example="example.access.token")
+    access_token = Field(
+        description="User access token.",
+        example="example.access.token",
+    )
     user_id = Field(description="User id.", example=2, default=1)
 
 
 class BaseRoom(BaseModel):
     """Base model for room."""
+
     ...
 
 
@@ -49,4 +56,3 @@ class ReadRoomByIdQuery(BaseModel):
 
 class ReadAllRoomsQuery(BaseModel):
     access_token: SecretStr = RoomFields.access_token
-

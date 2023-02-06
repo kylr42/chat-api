@@ -3,7 +3,7 @@ from typing import Dict
 from dependency_injector.wiring import Provide, inject
 
 from server.internal.pkg.models import SocketRoutes
-from server.pkg import models, clients
+from server.pkg import clients, models
 from server.pkg.logger import logger
 
 router = SocketRoutes()
@@ -16,9 +16,7 @@ __all__ = ["router"]
 async def chat_create_handler(
     sid: str,
     message: Dict[str, str],
-    room_client: clients.api.RoomClient = Provide[
-        clients.ClientContainers.room_client
-    ],
+    room_client: clients.api.RoomClient = Provide[clients.ClientContainers.room_client],
 ):
     logger.info(f"[{sid}] created room: {message['room_name']}")
 

@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List, Optional
 
 import pydantic
 
@@ -22,7 +22,9 @@ class MessageClient:
         )
         return models.Message.parse_obj(response)
 
-    async def read_message_by_id(self, cmd: models.ReadMessageByIdQuery) -> models.Message:
+    async def read_message_by_id(
+        self, cmd: models.ReadMessageByIdQuery
+    ) -> models.Message:
         response = await self.__client__.make_request(
             path=f"/message/{cmd.id}/",
             method="GET",
@@ -30,7 +32,9 @@ class MessageClient:
         )
         return models.Message.parse_obj(response)
 
-    async def read_all_messages(self, query: models.ReadAllMessagesQuery) -> List[models.Message]:
+    async def read_all_messages(
+        self, query: models.ReadAllMessagesQuery
+    ) -> List[models.Message]:
         response = await self.__client__.make_request(
             path="/message/",
             method="GET",

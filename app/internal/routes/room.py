@@ -26,7 +26,7 @@ async def create_room(
     room_service: RoomService = Depends(Provide[Services.room_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
-    cmd.user_id = credentials.subject.get('user_id')
+    cmd.user_id = credentials.subject.get("user_id")
 
     return await room_service.create_room(cmd=cmd)
 
@@ -42,7 +42,7 @@ async def read_all_user_rooms(
     room_service: RoomService = Depends(Provide[Services.room_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
-    user_id = credentials.subject.get('user_id')
+    user_id = credentials.subject.get("user_id")
 
     return await room_service.read_all_user_rooms(
         query=models.ReadAllUserRoomsQuery(user_id=user_id),
@@ -61,7 +61,7 @@ async def read_room(
     room_service: RoomService = Depends(Provide[Services.room_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
-    user_id = credentials.subject.get('user_id')
+    user_id = credentials.subject.get("user_id")
 
     return await room_service.read_specific_room_by_id(
         query=models.ReadRoomByIdQuery(room_id=room_id, user_id=user_id),
@@ -80,7 +80,7 @@ async def delete_room(
     room_service: RoomService = Depends(Provide[Services.room_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
-    user_id = credentials.subject.get('user_id')
+    user_id = credentials.subject.get("user_id")
 
     return await room_service.delete_room(
         cmd=models.DeleteRoomCommand(room_id=room_id, user_id=user_id),
@@ -100,7 +100,7 @@ async def update_room(
     room_service: RoomService = Depends(Provide[Services.room_service]),
     credentials: JwtAuthorizationCredentials = Security(access_security),
 ):
-    cmd.user_id = credentials.subject.get('user_id')
+    cmd.user_id = credentials.subject.get("user_id")
     cmd.room_id = room_id
 
     return await room_service.update_room(cmd=cmd)

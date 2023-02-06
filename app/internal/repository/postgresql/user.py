@@ -104,7 +104,8 @@ class UserRepository(Repository):
 
     @collect_response
     async def update_user_status(
-        self, cmd: models.UpdateUserStatusCommand
+        self,
+        cmd: models.UpdateUserStatusCommand,
     ) -> models.User:
         q = """
             update users

@@ -51,7 +51,8 @@ class RoomRepository(Repository):
 
     @collect_response
     async def read_all_user_rooms(
-        self, query: models.ReadAllUserRoomsQuery
+        self,
+        query: models.ReadAllUserRoomsQuery,
     ) -> List[models.Room]:
         q = """
             select
