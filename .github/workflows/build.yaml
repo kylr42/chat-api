@@ -28,7 +28,6 @@ jobs:
 
   build:
     runs-on: ubuntu-18.04
-    branches: [main, development, stable]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
