@@ -19,6 +19,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry
           poetry install
+      - name: Create .env
+        run: |
+          cp .env.example .env
       - name: Lint with flake8
         run: |
           make lint
